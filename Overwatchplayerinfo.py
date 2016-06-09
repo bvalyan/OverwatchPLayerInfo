@@ -12,10 +12,17 @@ import re
 print('input your Battle.net ID');
 name = raw_input();
 
+print('Platform?');
+platform = raw_input();
+    
+
 editedpcname = re.sub('\#', '-', name,0);
 #print editedpcname;
 
-request = Request('https://api.lootbox.eu/pc/us/'+ editedpcname+'/heroes')
+#print(platform);
+request = Request('https://api.lootbox.eu/'+platform+'/us/'+ editedpcname+'/heroes');
+
+
 
 try:
     response = urlopen(request)
@@ -85,7 +92,7 @@ if name == 'Mercy':
         heroWins = 0;
         
     #averageHealing = averageHealing.group(1);
-    print(averageHealing);
+    #print(averageHealing);
     averageHealing = re.sub(',', '', averageHealing, 0);
     calcResult = 0;
     tophealingthreshold = 3500;
@@ -112,7 +119,7 @@ if name == 'Mercy':
         calcResult += 5.0;
     else: calcResult += 3.0;
     
-    print(float(averageHealing));
+    #print(float(averageHealing));
     
     if float(heroWins) >= topwinthreshold:
         calcResult += 5.0
