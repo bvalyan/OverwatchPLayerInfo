@@ -155,9 +155,9 @@ if name == 'Mercy':
     
     print('Hero Score: ' + str(calcResult));
     
-    if calcResult >= 20:
+    if calcResult >= 30:
         battleClass = 'Alpha';
-    elif calcResult >= 15:
+    elif calcResult >= 20:
         battleClass = 'Beta';
     elif calcResult >= 10:
         battleClass = 'Gamma';
