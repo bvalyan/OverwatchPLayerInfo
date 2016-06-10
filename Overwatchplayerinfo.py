@@ -165,21 +165,37 @@ if name == 'Mercy':
 if name == 'Soldier76':
     calcResult = 0;
     elimsPerLife = re.search('EliminationsperLife":"(\d+,\d+|\d+)', playerInfo, 0);
-    elimsPerLife = elimsPerLife.group(1);
+    try: elimsPerLife = elimsPerLife.group(1);
+    except AttributeError:
+        elimsPerLife = 0;
+        
     #elimsPerLife = re.sub(',', '', averageHealing, 0);
     averageSoloKills = re.search('SoloKills-Average":"(\d+,\d+|\d+)', playerInfo, 0);
-    averageSoloKills = averageSoloKills.group(1);
+    try: averageSoloKills = averageSoloKills.group(1);
+    except AttributeError:
+        averageSoloKills = 0;
     averageElims = re.search('Eliminations-Average":"(\d+,\d+|\d+)', playerInfo, 0);
-    averageElims = averageElims.group(1);
+    try: averageElims = averageElims.group(1);
+    except AttributeError:
+        averageElims = 0;
     averageDamage = re.search('DamageDone-Average":"(\d+,\d+|\d+)', playerInfo, 0);
-    averageDamage = averageDamage.group(1);
-    averageDamage = re.sub(',', '', averageDamage, 0);
+    try: averageDamage = averageDamage.group(1);
+    except AttributeError:
+        averageDamage = 0;
+    try: averageDamage = re.sub(',', '', averageDamage, 0);
+    except TypeError: averageDamage = 0;
     winPercentage = re.search('WinPercentage":"(\d+,\d+|\d+)', playerInfo, 0); 
-    winPercentage = winPercentage.group(1);
+    try: winPercentage = winPercentage.group(1);
+    except AttributeError:
+        winPercentage = 0;
     weaponAccuracy = re.search('WeaponAccuracy":"(\d+,\d+|\d+)', playerInfo, 0);
-    weaponAccuracy = weaponAccuracy.group(1);
+    try: weaponAccuracy = weaponAccuracy.group(1);
+    except AttributeError:
+        weaponAccuracy = 0;
     helixKills = re.search('HelixRocketsKills-Average":"(\d+,\d+|\d+)', playerInfo, 0);
-    helixKills = helixKills.group(1);
+    try: helixKills = helixKills.group(1);
+    except AttributeError:
+        helixKills = 0;
     
     topElimThreshold = 3;
     medElimThreshold = 2;
@@ -201,6 +217,9 @@ if name == 'Soldier76':
         calcResult += 5
     elif float(elimsPerLife) >= medElimThreshold:
         calcResult += 3
+    elif float(elimsPerLife) == 0:
+        calcResult += 0
+    
     else: calcResult += 1.5
     
     print(calcResult);
@@ -209,6 +228,9 @@ if name == 'Soldier76':
         calcResult += 2
     elif float(averageSoloKills) >= averageSoloKillsMedThreshold:
         calcResult += 0.5
+    elif float(averageSoloKills) == 0:
+        calcResult += 0
+    
     else: calcResult += 0
     
     print(calcResult);
@@ -216,16 +238,20 @@ if name == 'Soldier76':
     if float(averageElims) >= averageElimsTopThreshold:
         calcResult += 9
     elif float(averageElims) >= averageElimsMedThreshold:
-        calcResult += 6
-    else: calcResult += 4
+        calcResult += 4.5
+    elif float(averageElims) == 0:
+        calcResult = 0    
+    else: calcResult += 2
     
     print(calcResult);
     
     if float(averageDamage) >= averageDamageTopThreshold:
         calcResult += 13
     elif float(averageDamage) >= averageDamageMedThreshold:
-        calcResult += 10
-    else: calcResult += 7
+        calcResult += 8
+    elif float(averageDamage) == 0:
+        calcResult += 0
+    else: calcResult += 4
     
     print(calcResult);
     
@@ -235,6 +261,8 @@ if name == 'Soldier76':
         calcResult += 1
     elif float(winPercentage) >= winPercentageMedLowThreshold:
         calcResult += .5
+    elif float(winPercentage) == 0:
+        calcResult += 0
     else: calcResult += 0
     
     print(calcResult);
@@ -243,6 +271,8 @@ if name == 'Soldier76':
         calcResult += 5
     elif float(weaponAccuracy) >= accuracyMedThreshold:
         calcResult += 3
+    elif float(weaponAccuracy) == 0:
+        calcResult += 0
     else: calcResult += 1.5
     
     print(calcResult);
@@ -251,6 +281,8 @@ if name == 'Soldier76':
         calcResult += 3
     elif float(helixKills) >= helixKillsMidThreshold:
         calcResult += 2
+    elif float(helixKills) == 0:
+        calcResult += 0
     else: calcResult += 1
     
     
