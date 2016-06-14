@@ -9,8 +9,6 @@ import sys
 import re
 from Tkinter import *
 
-
-
 print('Input your Battle.net ID');
 name = raw_input();
 
@@ -21,12 +19,13 @@ print('Scrubbing username...')
 editedpcname = re.sub('\#', '-', name,0);
 #print editedpcname;
 print('Requesting Data...')
-print('\n');
 #print(platform);
-request = Request('https://api.lootbox.eu/'+platform+'/us/'+ editedpcname+'/heroes');
+if platform == 'pc':
+    request = Request('https://api.lootbox.eu/'+platform+'/us/'+ editedpcname+'/heroes');
+else:
+    request = Request('https://api.lootbox.eu/'+platform+'/global/'+ editedpcname+'/heroes');
 
-
-
+print("this is the request" + request);
 try:
     response = urlopen(request)
     playerInfo = response.read()
@@ -34,7 +33,8 @@ try:
 except URLError, e:
     print 'No player info. Got an error code:', e
 
-print('Top Hero:');
+print("this is the request" + request);
+print('Top Hero:'+ request);
 heroUsed = re.search('name":"(\w+.{1}\s\d+|\w+)', playerInfo, 0); 
 name = heroUsed.group(1);
 if name == 'L':
@@ -49,7 +49,6 @@ if name == 'Soldier: 76': #Adjust for API naming conventions
     name = 'Soldier76';
 print(hours+ '\n');
 
-    
 request = Request('https://api.lootbox.eu/pc/us/'+ editedpcname+'/profile')
 
 try:
