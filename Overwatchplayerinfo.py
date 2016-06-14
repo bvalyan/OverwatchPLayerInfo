@@ -178,6 +178,11 @@ if name == 'Mercy':
    
 if name == 'Soldier76':
     calcResult = 0;
+    gamesPlayed = re.search('GamesPlayed":"(\d+,\d+|\d+)', playerInfo, 0);
+    try: gamesPlayed = gamesPlayed.group(1);
+    except AttributeError:
+        gamesPlayed = 0;
+    gamesPlayed = re.sub(',', '', gamesPlayed, 0);
     elimsPerLife = re.search('EliminationsperLife":"(\d+.\d+|\d+)', playerInfo, 0);
     try: elimsPerLife = elimsPerLife.group(1);
     except AttributeError:
@@ -303,6 +308,7 @@ if name == 'Soldier76':
         
 print('Hero Score: ' + str(calcResult));
 
+
 if calcResult >= 30:
     battleClass = 'Alpha';
 elif calcResult >= 20:
@@ -313,9 +319,12 @@ elif calcResult >= 5:
     battleClass = 'Delta';
 else: battleClass = 'Epsilon';
 
-print('Your battle class is ' + battleClass);
-        
-            
+if int(gamesPlayed) < 50:
+    print('NOTE: Player has not played enough games for a confident representation and therefore has not been definitively placed in a battle class.')
+    print('Your battle pre-class is ' + battleClass);
+
+else:        
+    print('Their battle class is ' + battleClass);     
     
     
    
