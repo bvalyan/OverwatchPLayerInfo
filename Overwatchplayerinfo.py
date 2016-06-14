@@ -95,6 +95,11 @@ except URLError, e:
     print 'No player info. Got an error code:', e 
  
 print(name);
+gamesPlayed = re.search('GamesPlayed":"(\d+,\d+|\d+)', playerInfo, 0);
+try: gamesPlayed = gamesPlayed.group(1);
+except AttributeError:
+    gamesPlayed = 0;
+gamesPlayed = re.sub(',', '', gamesPlayed, 0);
 
 if name == 'Mercy':
     averageHealing = re.search('HealingDone-Average":"(\d+,\d+|\d+)', playerInfo, 0);
@@ -178,11 +183,6 @@ if name == 'Mercy':
    
 if name == 'Soldier76':
     calcResult = 0;
-    gamesPlayed = re.search('GamesPlayed":"(\d+,\d+|\d+)', playerInfo, 0);
-    try: gamesPlayed = gamesPlayed.group(1);
-    except AttributeError:
-        gamesPlayed = 0;
-    gamesPlayed = re.sub(',', '', gamesPlayed, 0);
     elimsPerLife = re.search('EliminationsperLife":"(\d+.\d+|\d+)', playerInfo, 0);
     try: elimsPerLife = elimsPerLife.group(1);
     except AttributeError:
