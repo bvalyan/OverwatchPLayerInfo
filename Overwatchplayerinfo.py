@@ -9,6 +9,8 @@ import sys
 import re
 from Tkinter import *
 
+
+
 print('Input your Battle.net ID');
 name = raw_input();
 
@@ -19,13 +21,15 @@ print('Scrubbing username...')
 editedpcname = re.sub('\#', '-', name,0);
 #print editedpcname;
 print('Requesting Data...')
+print('\n');
 #print(platform);
 if platform == 'pc':
     request = Request('https://api.lootbox.eu/'+platform+'/us/'+ editedpcname+'/heroes');
 else:
     request = Request('https://api.lootbox.eu/'+platform+'/global/'+ editedpcname+'/heroes');
 
-print("this is the request" + request);
+
+
 try:
     response = urlopen(request)
     playerInfo = response.read()
@@ -33,8 +37,7 @@ try:
 except URLError, e:
     print 'No player info. Got an error code:', e
 
-print("this is the request" + request);
-print('Top Hero:'+ request);
+print('Top Hero:');
 heroUsed = re.search('name":"(\w+.{1}\s\d+|\w+)', playerInfo, 0); 
 name = heroUsed.group(1);
 if name == 'L':
@@ -49,7 +52,11 @@ if name == 'Soldier: 76': #Adjust for API naming conventions
     name = 'Soldier76';
 print(hours+ '\n');
 
-request = Request('https://api.lootbox.eu/pc/us/'+ editedpcname+'/profile')
+    
+if platform == 'pc':
+    request = Request('https://api.lootbox.eu/'+platform+'/us/'+ editedpcname+'/profile');
+else:
+    request = Request('https://api.lootbox.eu/'+platform+'/global/'+ editedpcname+'/profile');
 
 try:
     response = urlopen(request)
@@ -71,7 +78,15 @@ print "Matches played: " +  matchesPlayed.group(1);
 print('Current Level: ' + currentLevel.group(1));
 name = 'Soldier76'; #TEST
 
-request = Request('https://api.lootbox.eu/pc/us/'+editedpcname+'/hero/' + name + '/');
+if platform == 'pc':
+    request = Request('https://api.lootbox.eu/pc/us/'+editedpcname+'/hero/' + name + '/');
+else:
+    request = Request('https://api.lootbox.eu/xbl/global/'+editedpcname+'/hero/' + name + '/');
+
+#requestText = 'https://api.lootbox.eu/xbl/global/'+editedpcname+'/hero/' + name + '/';
+
+#print(requestText);
+
 try:
     response = urlopen(request)
     playerInfo = response.read()
@@ -163,17 +178,16 @@ if name == 'Mercy':
    
 if name == 'Soldier76':
     calcResult = 0;
-    elimsPerLife = re.search('EliminationsperLife":"(\d+,\d+|\d+)', playerInfo, 0);
+    elimsPerLife = re.search('EliminationsperLife":"(\d+.\d+|\d+)', playerInfo, 0);
     try: elimsPerLife = elimsPerLife.group(1);
     except AttributeError:
         elimsPerLife = 0;
-        
     #elimsPerLife = re.sub(',', '', averageHealing, 0);
-    averageSoloKills = re.search('SoloKills-Average":"(\d+,\d+|\d+)', playerInfo, 0);
+    averageSoloKills = re.search('SoloKills-Average":"(\d+.\d+|\d+)', playerInfo, 0);
     try: averageSoloKills = averageSoloKills.group(1);
     except AttributeError:
         averageSoloKills = 0;
-    averageElims = re.search('Eliminations-Average":"(\d+,\d+|\d+)', playerInfo, 0);
+    averageElims = re.search('Eliminations-Average":"(\d+.\d+|\d+)', playerInfo, 0);
     try: averageElims = averageElims.group(1);
     except AttributeError:
         averageElims = 0;
@@ -187,11 +201,11 @@ if name == 'Soldier76':
     try: winPercentage = winPercentage.group(1);
     except AttributeError:
         winPercentage = 0;
-    weaponAccuracy = re.search('WeaponAccuracy":"(\d+,\d+|\d+)', playerInfo, 0);
+    weaponAccuracy = re.search('WeaponAccuracy":"(\d+)', playerInfo, 0);
     try: weaponAccuracy = weaponAccuracy.group(1);
     except AttributeError:
         weaponAccuracy = 0;
-    helixKills = re.search('HelixRocketsKills-Average":"(\d+,\d+|\d+)', playerInfo, 0);
+    helixKills = re.search('HelixRocketsKills-Average": "(\d+.\d+|\d+)', playerInfo, 0);
     try: helixKills = helixKills.group(1);
     except AttributeError:
         helixKills = 0;
