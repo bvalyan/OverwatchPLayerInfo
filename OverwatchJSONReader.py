@@ -27,6 +27,8 @@ def getPlayerProfile(profile):
     profile['WinPct'] = playerProfile['data']['games']['win_percentage']
     profile['Playtime'] = playerProfile['data']['playtime']
     profile['Avatar'] = playerProfile['data']['avatar']
+
+    return profile
     
 
 
@@ -126,6 +128,8 @@ def getDataBastion(profile):
     profile['Heroes']['Bastion']['SelfHealing-Average'] = float(heroStats['SelfHealing'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Bastion']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataDVa(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/DVa/'
     request = Request(url);
@@ -156,6 +160,8 @@ def getDataDVa(profile):
     profile['Heroes']['DVa']['DamageBlocked-Average'] = float(heroStats['DamageBlocked'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['DVa']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataGenji(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Genji/'
     request = Request(url);
@@ -186,6 +192,8 @@ def getDataGenji(profile):
     profile['Heroes']['Genji']['DamageReflected-Average'] = float(heroStats['DamageReflected'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Genji']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',',''))  / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataHanzo(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Hanzo/'
     request = Request(url);
@@ -216,6 +224,8 @@ def getDataHanzo(profile):
     profile['Heroes']['Hanzo']['ScatterArrowKills-Average'] = float(heroStats['ScatterArrowKills'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Hanzo']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataJunkrat(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Junkrat/'
     request = Request(url);
@@ -246,6 +256,8 @@ def getDataJunkrat(profile):
     profile['Heroes']['Junkrat']['RIP-TireKills-Average'] = float(heroStats['RIP-TireKills'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Junkrat']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataLucio(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Lucio/'
     request = Request(url);
@@ -278,6 +290,8 @@ def getDataLucio(profile):
     profile['Heroes']['Lucio']['DefensiveAssists-Average'] = float(heroStats['DefensiveAssists'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Lucio']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataMcCree(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/McCree/'
     request = Request(url);
@@ -309,6 +323,8 @@ def getDataMcCree(profile):
     profile['Heroes']['McCree']['FantheHammerKills-Average'] = float(heroStats['FantheHammerKills'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['McCree']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataMei(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Mei/'
     request = Request(url);
@@ -341,6 +357,8 @@ def getDataMei(profile):
     profile['Heroes']['Mei']['DamageBlocked-Average'] = float(heroStats['DamageBlocked'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Mei']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataMercy(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Mercy/'
     request = Request(url);
@@ -357,7 +375,7 @@ def getDataMercy(profile):
     #Load JSON string into dictionary 
     heroStats = json.loads(heroInfo)
     
-    statList = ['GamesWon', 'PlayersResurrected', 'HealingDone','BlasterKills','OffensiveAssists', 'DefensiveAssists','Eliminations']
+    statList = ['GamesWon', 'PlayersResurrected', 'HealingDone','BlasterKills','OffensiveAssists', 'DefensiveAssists','Eliminations','PlayersSaved']
     if not StatCheck(heroStats, statList):
         print '\tNot Enough Data to Generate Stats...'
         return
@@ -374,7 +392,10 @@ def getDataMercy(profile):
     profile['Heroes']['Mercy']['OffensiveAssists-Average'] = float(heroStats['OffensiveAssists'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Mercy']['DefensiveAssists-Average'] = float(heroStats['DefensiveAssists'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Mercy']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
-    
+    profile['Heroes']['Mercy']['PlayersSaved-Average'] = float(heroStats['PlayersSaved'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
+
+    return profile
+
 def getDataPharah(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Pharah/'
     request = Request(url);
@@ -406,6 +427,8 @@ def getDataPharah(profile):
     profile['Heroes']['Pharah']['RocketDirectHits-Average'] = float(heroStats['RocketDirectHits'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Pharah']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataReaper(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Reaper/'
     request = Request(url);
@@ -437,6 +460,8 @@ def getDataReaper(profile):
     profile['Heroes']['Reaper']['DeathBlossomKills-Average'] = float(heroStats['DeathBlossomKills'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Reaper']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataReinhardt(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Reinhardt/'
     request = Request(url);
@@ -470,6 +495,8 @@ def getDataReinhardt(profile):
     profile['Heroes']['Reinhardt']['EarthshatterKills-Average'] = float(heroStats['EarthshatterKills'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Reinhardt']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataRoadhog(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Roadhog/'
     request = Request(url);
@@ -503,6 +530,8 @@ def getDataRoadhog(profile):
     profile['Heroes']['Roadhog']['SelfHealing-Average'] = float(heroStats['SelfHealing'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Roadhog']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataSoldier76(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Soldier76/'
     request = Request(url);
@@ -519,7 +548,7 @@ def getDataSoldier76(profile):
     #Load JSON string into dictionary 
     heroStats = json.loads(heroInfo)
     
-    statList = ['GamesWon', 'HelixRocketsKills', 'TacticalVisorKills','HealingDone','Eliminations']
+    statList = ['GamesWon', 'HelixRocketsKills', 'TacticalVisorKills','HealingDone','Eliminations','WeaponAccuracy','SoloKills-Average','EliminationsperLife','DamageDone-Average']
     if not StatCheck(heroStats, statList):
         print '\tNot Enough Data to Generate Stats...'
         return
@@ -535,7 +564,16 @@ def getDataSoldier76(profile):
     profile['Heroes']['Soldier76']['TacticalVisorKills-Average'] = float(heroStats['TacticalVisorKills'].replace(',', '')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Soldier76']['HealingDone-Average'] = float(heroStats['HealingDone'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Soldier76']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
+    profile['Heroes']['Soldier76']['WeaponAccuracy'] = float(heroStats['WeaponAccuracy'].replace('%',''))
+    profile['Heroes']['Soldier76']['SoloKills-Average'] = float(heroStats['SoloKills-Average'])
+    profile['Heroes']['Soldier76']['EliminationsperLife'] = float(heroStats['EliminationsperLife'])
+    profile['Heroes']['Soldier76']['DamageDone-Average'] = float(heroStats['DamageDone-Average'])
+
+    print(profile);
+
     
+    return profile
+
 def getDataSymmetra(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Symmetra/'
     request = Request(url);
@@ -569,6 +607,8 @@ def getDataSymmetra(profile):
     profile['Heroes']['Symmetra']['ShieldsProvided-Average'] = float(heroStats['ShieldsProvided'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Symmetra']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataTorborn(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Torbjoern/'
     request = Request(url);
@@ -601,6 +641,8 @@ def getDataTorborn(profile):
     profile['Heroes']['Torbjoern']['MoltenCoreKills-Average'] = float(heroStats['MoltenCoreKills'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Torbjoern']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataTracer(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Tracer/'
     request = Request(url);
@@ -632,6 +674,8 @@ def getDataTracer(profile):
     profile['Heroes']['Tracer']['SelfHealing-Average'] = float(heroStats['SelfHealing'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Tracer']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataWidowmaker(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Widowmaker/'
     request = Request(url);
@@ -664,6 +708,8 @@ def getDataWidowmaker(profile):
     profile['Heroes']['Widowmaker']['ScopedCritialRate'] = float(heroStats['ScopedCriticalHits'].replace(',','')) / float(heroStats['ScopedHits'].replace(',',''))
     profile['Heroes']['Widowmaker']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataWinston(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Winston/'
     request = Request(url);
@@ -696,6 +742,8 @@ def getDataWinston(profile):
     profile['Heroes']['Winston']['JumpPackKills-Average'] = float(heroStats['JumpPackKills'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Winston']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataZarya(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Zarya/'
     request = Request(url);
@@ -730,6 +778,8 @@ def getDataZarya(profile):
     profile['Heroes']['Zarya']['ProjectedBarriersApplied-Average'] = float(heroStats['ProjectedBarriersApplied'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Zarya']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
 def getDataZenyatta(profile):
     url = 'https://api.lootbox.eu/'+profile['Platform']+'/'+profile['Region']+'/'+profile['GamerTag']+'/hero/Zenyatta/'
     request = Request(url);
@@ -763,6 +813,168 @@ def getDataZenyatta(profile):
     profile['Heroes']['Zenyatta']['DefensiveAssists-Average'] = float(heroStats['DefensiveAssists'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Zenyatta']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     
+    return profile
+
+##################################################
+## Algorithm Computation
+
+def computeScore(heroName, profile):
+    if heroName == 'Mercy':
+        calcResult = 0;
+        preFlag = 0;
+        heroDict = getDataMercy(profile);
+        tophealingthreshold = 3500;
+        midhighhealingthreshold = 2500;
+        midhealingthreshold = 1500;
+        lowhealingthreshold = 750;
+        topwinthreshold = 50;
+        midwinthreshold = 48;
+        toprezthreshold = 5;
+        midrezthreshold = 3.4;
+        topsavedthreshold = 7.51;
+        midsavedthreshold = 4.51;
+        topdefassistthreshold = 10;
+        middefassistthreshold = 8;
+
+        if heroDict['Heroes']['Mercy']['HealingDone-Average'] >= tophealingthreshold:
+            calcResult+= 15.0;
+        elif heroDict['Heroes']['Mercy']['HealingDone-Average'] >= midhighhealingthreshold:
+            calcResult += 10.0;
+        elif heroDict['Heroes']['Mercy']['HealingDone-Average'] >= midhealingthreshold:
+            calcResult += 6.0;
+        else: calcResult += 3.0;
+        
+        print(calcResult);
+        
+        #print(float(averageHealing));
+        
+        if heroDict['Heroes']['Mercy']['WinPercentage'] >= topwinthreshold:
+            calcResult += 5.0
+        elif heroDict['Heroes']['Mercy']['WinPercentage'] >= midwinthreshold:
+            calcResult += 3.5;
+        else: calcResult += 2
+        
+        print(calcResult);
+        
+        if heroDict['Heroes']['Mercy']['PlayersResurrected-Average'] >= toprezthreshold:
+            calcResult += 5.0;
+        elif heroDict['Heroes']['Mercy']['PlayersResurrected-Average'] >= midrezthreshold:
+            calcResult += 3.0;
+        else: calcResult += 1.0;
+        
+    
+        print(calcResult);
+        #print(playersrezzed);
+        
+        if heroDict['Heroes']['Mercy']['PlayersSaved-Average'] >= topsavedthreshold:
+            calcResult += 10;
+        elif heroDict['Heroes']['Mercy']['PlayersSaved-Average'] >= midsavedthreshold:
+            calcResult += 7;
+        else: calcResult += 5;
+        
+        print(calcResult);
+        
+        if heroDict['Heroes']['Mercy']['DefensiveAssists-Average'] >= topdefassistthreshold:
+            calcResult += 5;
+        elif heroDict['Heroes']['Mercy']['DefensiveAssists-Average'] >= middefassistthreshold:
+            calcResult += 3;
+        else: calcResult += 1;
+
+        if heroDict['Heroes']['Mercy']['GamesPlayed'] < 50:
+            preFlag = 1;
+
+    if heroName == 'Soldier76':
+        calcResult = 0;
+        topElimThreshold = 3;
+        medElimThreshold = 2;
+        averageSoloKillsTopThreshold = 3.5;
+        averageSoloKillsMedThreshold = 2.8;
+        averageElimsTopThreshold = 18;
+        averageElimsMedThreshold = 14;
+        averageDamageTopThreshold = 7800;
+        averageDamageMedThreshold = 5500;
+        winPercentageTopThreshold = 90;
+        winPercentageMedThreshold = 50;
+        winPercentageMedLowThreshold = 40;
+        accuracyTopThreshold = 40;
+        accuracyMedThreshold = 30;
+        helixKillsTopThreshold = 4;
+        helixKillsMidThreshold = 2;
+        
+        if profile['Heroes']['Soldier76']['EliminationsperLife'] >= topElimThreshold:
+            calcResult += 5
+        elif profile['Heroes']['Soldier76']['EliminationsperLife'] >= medElimThreshold:
+            calcResult += 3
+        elif profile['Heroes']['Soldier76']['EliminationsperLife'] == 0:
+            calcResult += 0
+        
+        else: calcResult += 1.5
+        
+        print(calcResult);
+        
+        if profile['Heroes']['Soldier76']['SoloKills-Average'] >= averageSoloKillsTopThreshold:
+            calcResult += 2
+        elif profile['Heroes']['Soldier76']['SoloKills-Average'] >= averageSoloKillsMedThreshold:
+            calcResult += 0.5
+        elif profile['Heroes']['Soldier76']['SoloKills-Average'] == 0:
+            calcResult += 0
+        
+        else: calcResult += 0
+        
+        print(calcResult);
+        
+        if  profile['Heroes']['Soldier76']['Eliminations-Average'] >= averageElimsTopThreshold:
+            calcResult += 9
+        elif profile['Heroes']['Soldier76']['Eliminations-Average'] >= averageElimsMedThreshold:
+            calcResult += 4.5
+        elif profile['Heroes']['Soldier76']['Eliminations-Average'] == 0:
+            calcResult = 0    
+        else: calcResult += 2
+        
+        print(calcResult);
+        
+        if profile['Heroes']['Soldier76']['DamageDone-Average']  >= averageDamageTopThreshold:
+            calcResult += 13
+        elif profile['Heroes']['Soldier76']['DamageDone-Average']  >= averageDamageMedThreshold:
+            calcResult += 8
+        elif profile['Heroes']['Soldier76']['DamageDone-Average']  == 0:
+            calcResult += 0
+        else: calcResult += 4
+        
+        print(calcResult);
+        
+        if profile['Heroes']['Soldier76']['WinPercentage'] >= winPercentageTopThreshold:
+            calcResult += 3
+        elif profile['Heroes']['Soldier76']['WinPercentage'] >= winPercentageMedThreshold:
+            calcResult += 1
+        elif profile['Heroes']['Soldier76']['WinPercentage'] >= winPercentageMedLowThreshold:
+            calcResult += .5
+        elif profile['Heroes']['Soldier76']['WinPercentage'] == 0:
+            calcResult += 0
+        else: calcResult += 0
+    
+        print(calcResult);
+        
+        if profile['Heroes']['Soldier76']['WeaponAccuracy'] >= accuracyTopThreshold:
+            calcResult += 5
+        elif profile['Heroes']['Soldier76']['WeaponAccuracy'] >= accuracyMedThreshold:
+            calcResult += 3
+        elif profile['Heroes']['Soldier76']['WeaponAccuracy'] == 0:
+            calcResult += 0
+        else: calcResult += 1.5
+        
+        print(calcResult);
+        
+        if profile['Heroes']['Soldier76']['HelixRocketsKills-Average'] >= helixKillsTopThreshold:
+            calcResult += 3
+        elif profile['Heroes']['Soldier76']['HelixRocketsKills-Average'] >= helixKillsMidThreshold:
+            calcResult += 2
+        elif profile['Heroes']['Soldier76']['HelixRocketsKills-Average'] == 0:
+            calcResult += 0
+        else: calcResult += 1
+
+    return (calcResult, preFlag)
+
 ##################################################
 
 def main():
@@ -836,13 +1048,36 @@ def main():
     }
     
     #call get profile
-    getPlayerProfile(playerProfile)
+    profile = getPlayerProfile(playerProfile)
     
     #call Playtime and Image function to start building the player profile
     getHeroPlaytimeImage(playerProfile)
     
     #Loop through the heroes the player has played with calling the "getData" for each
     heroes = playerProfile['Heroes'].keys()
+
+    print("Please input the hero you wish to obtain a rating for.")
+    inputHero = raw_input();
+    heroScore, flag = computeScore(inputHero, profile);
+    if heroScore >= 30:
+        battleClass = 'Alpha';
+    elif heroScore >= 20:
+        battleClass = 'Beta';
+    elif heroScore >= 10:
+        battleClass = 'Gamma';
+    elif heroScore >= 5:
+        battleClass = 'Delta';
+    else: battleClass = 'Epsilon';
+    
+    if flag == 1: #Flag indicates amount of games won
+        print('NOTE: Player has not played enough games for a confident representation and therefore has not been definitively placed in a battle class.');
+        print('Your battle pre-class is ' + battleClass);
+    else:
+        print('Their battle class is ' + battleClass);
+
+    print('Hero Score: ' + str(heroScore));
+
+    '''
     print "Loading data for "+str( len(heroes) )+" heroes..."
     
     for hero in heroes:
@@ -889,10 +1124,11 @@ def main():
             getDataZarya(playerProfile)
         elif hero == 'Zenyatta':
             getDataZenyatta(playerProfile)
+            '''
 
 
     #print all gathered data
-    print json.dumps(playerProfile,  indent=4)
+    #print json.dumps(playerProfile,  indent=4)
 
 if __name__ == "__main__":
     main()
