@@ -99,6 +99,7 @@ gamesPlayed = re.search('GamesPlayed":"(\d+,\d+|\d+)', playerInfo, 0);
 try: gamesPlayed = gamesPlayed.group(1);
 except AttributeError:
     gamesPlayed = 0;
+
 gamesPlayed = re.sub(',', '', gamesPlayed, 0);
 
 if name == 'Mercy':
@@ -302,7 +303,37 @@ if name == 'Soldier76':
     elif float(helixKills) == 0:
         calcResult += 0
     else: calcResult += 1
+ 
+if name == 'Lucio':
+    calcResult = 0;
+    averageHealing = re.search('HealingDone-Average":"(\d+,\d+|\d+)', playerInfo, 0);
+    averageHealing = averageHealing.group(1);
+    averageHealing = re.sub(',', '', averageHealing, 0);
+    heroWins = re.search('WinPercentage":"(\d+)', playerInfo, 0);
+    heroWins = heroWins.group(1);
+    soundBarriers = re.search('SoundBarriersProvided-Average": "(\d+.\d+|\d+)', playerInfo, 0);
+    soundBarriers = soundBarriers.group(1);
+    defAssists = re.search('"DefensiveAssists-Average": "(\d+.\d+|\d+)', playerInfo, 0)
+    defAssists = defAssists.group(1);
+    objTime = re.search('ObjectiveTime-Average": "(\d+.\d+|\d+)', playerInfo, 0)
+    objTime = objTime.group(1);
     
+    topaveragehealingthreshold = 7000;
+    midaveragehealingthreshold = 5500;
+    topwinratethreshold = 61;
+    midwinratethreshold = 57;
+    topSBThreshold = 8;
+    midSBThreshold = 5;
+    topDefThreshold = 5;
+    midDefThreshold = 3;
+    topTimeThreshold = 75;
+    midTimeThreshold = 70;
+    
+    if float(averageHealing > topaveragehealingthreshold):
+        calcResult += 10;
+    elif float(averageHealing > midaveragehealingthreshold):
+        calcResult += 7;
+        
     
     
         
