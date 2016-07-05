@@ -1,6 +1,7 @@
 import sys
 import getopt
 import json
+from decimal import *
 from urllib2 import Request, urlopen, URLError
 
 def getPlayerProfile(profile):
@@ -273,7 +274,7 @@ def getDataLucio(profile):
     #Load JSON string into dictionary 
     heroStats = json.loads(heroInfo)
     
-    statList = ['GamesWon', 'SoundBarriersProvided', 'HealingDone','OffensiveAssists','DefensiveAssists','Eliminations']
+    statList = ['GamesWon', 'SoundBarriersProvided', 'HealingDone','OffensiveAssists','DefensiveAssists','Eliminations', 'SoundBarriersProvided-MostinGame', 'ObjectiveTime-Average']
     if not StatCheck(heroStats, statList):
         print '\tNot Enough Data to Generate Stats...'
         return
@@ -289,6 +290,8 @@ def getDataLucio(profile):
     profile['Heroes']['Lucio']['OffensiveAssists-Average'] = float(heroStats['OffensiveAssists'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Lucio']['DefensiveAssists-Average'] = float(heroStats['DefensiveAssists'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
     profile['Heroes']['Lucio']['Eliminations-Average'] = float(heroStats['Eliminations'].replace(',','')) / float(heroStats['GamesPlayed'].replace(',',''))
+    profile['Heroes']['Lucio']['SoundBarriersProvided-MostinGame'] = float(heroStats['SoundBarriersProvided-MostinGame'])
+    profile['Heroes']['Lucio']['ObjectiveTime-Average'] = float(heroStats['ObjectiveTime-Average'])
     
     return profile
 
@@ -567,10 +570,7 @@ def getDataSoldier76(profile):
     profile['Heroes']['Soldier76']['WeaponAccuracy'] = float(heroStats['WeaponAccuracy'].replace('%',''))
     profile['Heroes']['Soldier76']['SoloKills-Average'] = float(heroStats['SoloKills-Average'])
     profile['Heroes']['Soldier76']['EliminationsperLife'] = float(heroStats['EliminationsperLife'])
-    profile['Heroes']['Soldier76']['DamageDone-Average'] = float(heroStats['DamageDone-Average'])
-
-    print(profile);
-
+    profile['Heroes']['Soldier76']['DamageDone-Average'] = float(heroStats['DamageDone-Average'].replace(',',''))
     
     return profile
 
@@ -819,6 +819,7 @@ def getDataZenyatta(profile):
 ## Algorithm Computation
 
 def computeScore(heroName, profile):
+
     if heroName == 'Mercy':
         calcResult = 0;
         preFlag = 0;
@@ -839,10 +840,10 @@ def computeScore(heroName, profile):
         if heroDict['Heroes']['Mercy']['HealingDone-Average'] >= tophealingthreshold:
             calcResult+= 15.0;
         elif heroDict['Heroes']['Mercy']['HealingDone-Average'] >= midhighhealingthreshold:
-            calcResult += 10.0;
+            calcResult += midHighPercentage(15.0);
         elif heroDict['Heroes']['Mercy']['HealingDone-Average'] >= midhealingthreshold:
-            calcResult += 6.0;
-        else: calcResult += 3.0;
+            calcResult += midPercentage(15.0);
+        else: calcResult += lowPercentage(15.0);
         
         print(calcResult);
         
@@ -851,16 +852,16 @@ def computeScore(heroName, profile):
         if heroDict['Heroes']['Mercy']['WinPercentage'] >= topwinthreshold:
             calcResult += 5.0
         elif heroDict['Heroes']['Mercy']['WinPercentage'] >= midwinthreshold:
-            calcResult += 3.5;
-        else: calcResult += 2
+            calcResult += midPercentage(5.0);
+        else: calcResult += lowPercentage(5.0);
         
         print(calcResult);
         
         if heroDict['Heroes']['Mercy']['PlayersResurrected-Average'] >= toprezthreshold:
             calcResult += 5.0;
         elif heroDict['Heroes']['Mercy']['PlayersResurrected-Average'] >= midrezthreshold:
-            calcResult += 3.0;
-        else: calcResult += 1.0;
+            calcResult += midPercentage(5.0);
+        else: calcResult += lowPercentage(5.0);
         
     
         print(calcResult);
@@ -869,24 +870,26 @@ def computeScore(heroName, profile):
         if heroDict['Heroes']['Mercy']['PlayersSaved-Average'] >= topsavedthreshold:
             calcResult += 10;
         elif heroDict['Heroes']['Mercy']['PlayersSaved-Average'] >= midsavedthreshold:
-            calcResult += 7;
-        else: calcResult += 5;
+            calcResult += midPercentage(10.0);
+        else: calcResult += lowPercentage(10.0);
         
         print(calcResult);
         
         if heroDict['Heroes']['Mercy']['DefensiveAssists-Average'] >= topdefassistthreshold:
             calcResult += 5;
         elif heroDict['Heroes']['Mercy']['DefensiveAssists-Average'] >= middefassistthreshold:
-            calcResult += 3;
-        else: calcResult += 1;
+            calcResult += midPercentage(5.0);
+        else: calcResult += lowPercentage(5.0);
 
         if heroDict['Heroes']['Mercy']['GamesPlayed'] < 50:
             preFlag = 1;
 
     if heroName == 'Soldier76':
         calcResult = 0;
+        preFlag = 0;
         topElimThreshold = 3;
         medElimThreshold = 2;
+        heroDict = getDataSoldier76(profile);
         averageSoloKillsTopThreshold = 3.5;
         averageSoloKillsMedThreshold = 2.8;
         averageElimsTopThreshold = 18;
@@ -900,80 +903,185 @@ def computeScore(heroName, profile):
         accuracyMedThreshold = 30;
         helixKillsTopThreshold = 4;
         helixKillsMidThreshold = 2;
+
+        print(heroDict['Heroes']['Soldier76'])
         
-        if profile['Heroes']['Soldier76']['EliminationsperLife'] >= topElimThreshold:
+        if float(heroDict['Heroes']['Soldier76']['EliminationsperLife']) >= float(topElimThreshold):
             calcResult += 5
-        elif profile['Heroes']['Soldier76']['EliminationsperLife'] >= medElimThreshold:
-            calcResult += 3
-        elif profile['Heroes']['Soldier76']['EliminationsperLife'] == 0:
-            calcResult += 0
+        elif float(heroDict['Heroes']['Soldier76']['EliminationsperLife']) >= float(medElimThreshold):
+            calcResult += midPercentage(5.0);
+        elif float(heroDict['Heroes']['Soldier76']['EliminationsperLife']) == 0:
+            print('true');
+            calcResult += 0;
         
-        else: calcResult += 1.5
+        else: calcResult += lowPercentage(5.0);
         
-        print(calcResult);
         
-        if profile['Heroes']['Soldier76']['SoloKills-Average'] >= averageSoloKillsTopThreshold:
+        if heroDict['Heroes']['Soldier76']['SoloKills-Average'] >= averageSoloKillsTopThreshold:
             calcResult += 2
-        elif profile['Heroes']['Soldier76']['SoloKills-Average'] >= averageSoloKillsMedThreshold:
-            calcResult += 0.5
-        elif profile['Heroes']['Soldier76']['SoloKills-Average'] == 0:
-            calcResult += 0
+        elif heroDict['Heroes']['Soldier76']['SoloKills-Average'] >= averageSoloKillsMedThreshold:
+            calcResult += midPercentage(2.0)
+        elif heroDict['Heroes']['Soldier76']['SoloKills-Average'] == 0:
+            calcResult += 0;
         
-        else: calcResult += 0
+        else: calcResult += lowPercentage(2.0)
         
         print(calcResult);
         
-        if  profile['Heroes']['Soldier76']['Eliminations-Average'] >= averageElimsTopThreshold:
+        if  heroDict['Heroes']['Soldier76']['Eliminations-Average'] >= averageElimsTopThreshold:
             calcResult += 9
-        elif profile['Heroes']['Soldier76']['Eliminations-Average'] >= averageElimsMedThreshold:
-            calcResult += 4.5
-        elif profile['Heroes']['Soldier76']['Eliminations-Average'] == 0:
-            calcResult = 0    
-        else: calcResult += 2
+        elif heroDict['Heroes']['Soldier76']['Eliminations-Average'] >= averageElimsMedThreshold:
+            calcResult += midPercentage(9.0)
+        elif heroDict['Heroes']['Soldier76']['Eliminations-Average'] == 0:
+            calcResult += 0    
+        else: calcResult += lowPercentage(9.0)
         
         print(calcResult);
         
-        if profile['Heroes']['Soldier76']['DamageDone-Average']  >= averageDamageTopThreshold:
+        if heroDict['Heroes']['Soldier76']['DamageDone-Average']  >= averageDamageTopThreshold:
             calcResult += 13
-        elif profile['Heroes']['Soldier76']['DamageDone-Average']  >= averageDamageMedThreshold:
-            calcResult += 8
-        elif profile['Heroes']['Soldier76']['DamageDone-Average']  == 0:
+        elif heroDict['Heroes']['Soldier76']['DamageDone-Average']  >= averageDamageMedThreshold:
+            calcResult += midPercentage(13.0);
+        elif heroDict['Heroes']['Soldier76']['DamageDone-Average']  == 0:
             calcResult += 0
-        else: calcResult += 4
+        else: calcResult += lowPercentage(13.0);
         
         print(calcResult);
         
-        if profile['Heroes']['Soldier76']['WinPercentage'] >= winPercentageTopThreshold:
+        if heroDict['Heroes']['Soldier76']['WinPercentage'] >= winPercentageTopThreshold:
             calcResult += 3
-        elif profile['Heroes']['Soldier76']['WinPercentage'] >= winPercentageMedThreshold:
-            calcResult += 1
-        elif profile['Heroes']['Soldier76']['WinPercentage'] >= winPercentageMedLowThreshold:
-            calcResult += .5
-        elif profile['Heroes']['Soldier76']['WinPercentage'] == 0:
+        elif heroDict['Heroes']['Soldier76']['WinPercentage'] >= winPercentageMedThreshold:
+            calcResult += midHighPercentage(3.0)
+        elif heroDict['Heroes']['Soldier76']['WinPercentage'] >= winPercentageMedLowThreshold:
+            calcResult += midPercentage(3.0)
+        elif heroDict['Heroes']['Soldier76']['WinPercentage'] == 0:
             calcResult += 0
-        else: calcResult += 0
+        else: calcResult += lowPercentage(3.0)
     
         print(calcResult);
         
-        if profile['Heroes']['Soldier76']['WeaponAccuracy'] >= accuracyTopThreshold:
+        if heroDict['Heroes']['Soldier76']['WeaponAccuracy'] >= accuracyTopThreshold:
             calcResult += 5
-        elif profile['Heroes']['Soldier76']['WeaponAccuracy'] >= accuracyMedThreshold:
-            calcResult += 3
-        elif profile['Heroes']['Soldier76']['WeaponAccuracy'] == 0:
+        elif heroDict['Heroes']['Soldier76']['WeaponAccuracy'] >= accuracyMedThreshold:
+            calcResult += midPercentage(5.0)
+        elif heroDict['Heroes']['Soldier76']['WeaponAccuracy'] == 0:
             calcResult += 0
-        else: calcResult += 1.5
+        else: calcResult += lowPercentage(5.0)
         
         print(calcResult);
         
-        if profile['Heroes']['Soldier76']['HelixRocketsKills-Average'] >= helixKillsTopThreshold:
+        if heroDict['Heroes']['Soldier76']['HelixRocketsKills-Average'] >= helixKillsTopThreshold:
             calcResult += 3
-        elif profile['Heroes']['Soldier76']['HelixRocketsKills-Average'] >= helixKillsMidThreshold:
-            calcResult += 2
-        elif profile['Heroes']['Soldier76']['HelixRocketsKills-Average'] == 0:
+        elif heroDict['Heroes']['Soldier76']['HelixRocketsKills-Average'] >= helixKillsMidThreshold:
+            calcResult += midPercentage(3.0)
+        elif heroDict['Heroes']['Soldier76']['HelixRocketsKills-Average'] == 0:
             calcResult += 0
-        else: calcResult += 1
+        else: calcResult += lowPercentage(3.0)
+
+        if heroDict['Heroes']['Soldier76']['GamesPlayed'] < 50:
+            preFlag = 1;
+
+
+    if heroName == "Lucio":
+        calcResult = 0;
+        preFlag = 0;
+        topaveragehealingthreshold = 7000;
+        midaveragehealingthreshold = 5500;
+        topwinratethreshold = 61;
+        midwinratethreshold = 57;
+        topSBThreshold = 8;
+        midSBThreshold = 5;
+        topDefThreshold = 5;
+        midDefThreshold = 3;
+        topTimeThreshold = 75;
+        midTimeThreshold = 70;
+        topElimThreshold =  7;
+        midElimThreshold =  5;
+        heroDict = getDataLucio(profile);
+
+        if heroDict['Heroes']['Lucio']['HealingDone-Average'] >= topaveragehealingthreshold:
+            calcResult += 10;
+        elif heroDict['Heroes']['Lucio']['HealingDone-Average'] >= midaveragehealingthreshold:
+            calcResult += midPercentage(10);
+        else: calcResult = lowPercentage(10);
+
+        print(calcResult);
+
+        if heroDict['Heroes']['Lucio']['WinPercentage'] >= topwinratethreshold:
+            calcResult += 5;
+        elif profile['Heroes']['Lucio']['WinPercentage']  >= midwinratethreshold:
+            calcResult += midPercentage(5);
+        else: calcResult += lowPercentage(5);
+
+        print(calcResult);
+
+
+        if heroDict['Heroes']['Lucio']['SoundBarriersProvided-Average'] >= topSBThreshold:
+            calcResult +=7;
+        elif heroDict['Heroes']['Lucio']['SoundBarriersProvided-Average'] >= midSBThreshold:
+            calcResult += midPercentage(7);
+        else:
+            calcResult += lowPercentage(7);
+
+        print(calcResult);
+
+        if heroDict['Heroes']['Lucio']['DefensiveAssists-Average'] >= topDefThreshold:
+            calcResult += 8;
+        elif heroDict['Heroes']['Lucio']['DefensiveAssists-Average'] >= midDefThreshold:
+            calcResult += midPercentage(8);
+        else:
+            calcResult += lowPercentage(8);
+
+        print(calcResult);
+
+        if heroDict['Heroes']['Lucio']['ObjectiveTime-Average'] >= topTimeThreshold:
+            calcResult += 5;
+        elif heroDict['Heroes']['Lucio']['ObjectiveTime-Average'] >= midTimeThreshold:
+            calcResult += midPercentage(5);
+        else:
+            calcResult += lowPercentage(5);
+
+        print(calcResult);
+
+        if heroDict['Heroes']['Lucio']['Eliminations-Average'] >= topElimThreshold:
+            calcResult += 5;
+        elif heroDict['Heroes']['Lucio']['Eliminations-Average'] >= midElimThreshold:
+            calcResult += midPercentage(5);
+        else:
+            calcResult += lowPercentage(5);
+
+
+        if heroDict['Heroes']['Lucio']['GamesPlayed'] < 50:
+            preFlag = 1;
+
+    if heroName == "Junkrat":
+        calcResult = 0;
+        preFlag = 0;
+        heroDict = getDataJunkrat(profile);
+        topElimThreshold = 12;
+        midElimThreshold = 9;
+        topdamagetheshold = 6500;
+        middamagethreshold = 5000;
+        
+
+
 
     return (calcResult, preFlag)
+
+##################################################
+
+def midHighPercentage(topScore):
+    newpercentage = float(topScore) * (85.0/100.0);
+    return newpercentage;
+
+def midPercentage(topScore):
+    newpercentage = float(topScore) * (75.0/100.0);
+    return newpercentage;
+
+def lowPercentage(topScore):
+    newpercentage = float(topScore) * (50.0/100.0);
+    return newpercentage;
+
 
 ##################################################
 
